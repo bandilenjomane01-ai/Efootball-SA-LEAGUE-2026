@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E Football 2026 - World Cup Edition</title>
+    <style>
+        /* --- FIFA / EUROPEAN TOURNAMENT STYLING --- */
+        :root {
+            --primary-color: #1a456e; /* Deep Royal Blue (European/FIFA theme) */
+            --secondary-color: #ffc72c; /* Rich Gold/Yellow */
+            --tertiary-color: #008751; /* Vibrant Green (Pitch/Energy) */
+            --text-light: #ffffff;
+            --text-dark: #1a1a1a;
+            --table-header: #0e2d4e;
+            --match-background: #f0f4f8; 
+            --card-hover-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
+            --knockout-red: #cc0000;
+            --promotion-green: #388e3c; /* Darker green for promotion */
+            --relegation-red: #d32f2f; /* Darker red for relegation */
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f2f5;
+            color: var(--text-dark);
+            text-align: center;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+        }
+
+        header {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            padding: 30px 0;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            background-image: linear-gradient(to right, var(--primary-color), #0e2d4e);
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 3em;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px var(--secondary-color);
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Navigation */
+        .nav-buttons button {
+            background-color: var(--secondary-color);
+            color: var(--primary-color);
+            border: none;
+            padding: 15px 35px;
+            margin: 10px;
+            font-size: 1.3em;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 50px; 
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-buttons button:hover {
+            background-color: #e6b127;
+            transform: scale(1.05) translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .section {
+            background-color: var(--text-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            margin-top: 30px;
+            text-align: left;
+            display: none;
+            min-height: 60vh;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+        
+        /* Fixture Container & Match Day Header */
+        .fixture-container {
+            border: 2px solid var(--tertiary-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+            background-color: var(--match-background);
+            box-shadow: inset 0 0 15px rgba(0, 135, 81, 0.1);
+        }
+
+        .match-day-header {
+            background-color: var(--tertiary-color);
+            color: var(--text-light);
+            padding: 10px 20px;
+            margin: 20px 0 15px 0;
+            border-radius: 6px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Stylish Fixture Card */
+        .fixture-match {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px;
+            margin-bottom: 12px;
+            background-color: var(--text-light);
+            border-radius: 8px;
+            border-left: 5px solid var(--primary-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .fixture-match:hover {
+            transform: translateY(-3px) rotateX(1deg);
+            box-shadow: var(--card-hover-shadow);
+        }
+        
+        .match-info {
+            display: flex;
+            align-items: center;
+            font-size: 1.15em;
+            font-weight: 500;
+            width: 45%;
+        }
+        .match-info span {
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        .match-info strong {
+            margin: 0 15px;
+            font-size: 1.4em;
+            color: var(--knockout-red);
+        }
+        .score-input {
+            width: 55%;
+            text-align: right;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: wrap; /* Allows wrapping on smaller screens */
+        }
+        
+        /* Input styling */
+        input[type="number"] {
+            width: 50px;
+            text-align: center;
+            margin: 0 5px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .score-input button {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: bold;
+            margin-left: 5px;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+        }
+        .score-input button:hover {
+            background-color: var(--table-header);
+        }
+
+        /* League Specific Agg Score Style */
+        .agg-score-display {
+            font-size: 1em;
+            font-weight: bold;
+            color: var(--relegation-red); 
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+        
+        /* League Table */
+        .league-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .league-table th, .league-table td {
+            padding: 15px 10px;
+            text-align: center;
+        }
+
+        .league-table th {
+            background-color: var(--table-header);
+            color: var(--text-light);
+        }
+        .league-table tr:nth-child(even) {
+            background-color: #f4f7fa;
+        }
+        .league-table tr:hover {
+            background-color: #eaf1f8;
+        }
+        
+        /* Promotion/Relegation Styles */
+        .promotion-team {
+            background-color: #e8f5e9 !important; /* Very light green background for promotion */
+            font-weight: bold;
+        }
+        .relegation-team {
+            background-color: #ffebee !important; /* Very light red background for relegation */
+        }
+        .promotion-team .team-name {
+            color: var(--promotion-green);
+        }
+        .relegation-team .team-name {
+            color: var(--relegation-red);
+        }
+
+        /* ADJUSTMENT: Further reduced font size for form column */
+        .league-table td.form-indicators {
+            font-size: 0.6em; 
+            white-space: nowrap;
+        }
+        
+        /* Trophy Popup Styling (Crucial for the JS to work) */
+        .trophy-popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .trophy-content {
+            background: var(--text-light);
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transform: scale(1.1);
+            transition: transform 0.3s;
+        }
+        .trophy-icon {
+            font-size: 5em;
+            margin-bottom: 10px;
+        }
+
+        /* --- NEW TEAM MANAGEMENT UI STYLES --- */
+        
+        .league-management-wrapper {
+            background-color: #fcfcfc;
+            padding: 25px;
+            border-radius: 10px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .team-input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: stretch;
+        }
+
+        .team-input-group input[type="text"] {
+            flex-grow: 1;
+            padding: 12px 15px;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .team-input-group input[type="text"]:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 8px rgba(255, 199, 44, 0.5);
+            outline: none;
+        }
+
+        /* Generic Team Management Button Style */
+        .manage-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s, background-color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .manage-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Specific Button Colors */
+        .add-btn {
+            background-color: var(--tertiary-color);
+            color: var(--text-light);
+        }
+        .add-btn:hover {
+            background-color: #00965e;
+        }
+
+        .generate-btn {
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            width: 100%; /* Full width below the input group */
+            margin-top: 15px;
+        }
+        .generate-btn:hover {
+            background-color: #245a8f;
+        }
+
+        /* Team List Display */
+        .team-list-display-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px dashed #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+        }
+
+        .team-list-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .team-chip-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .team-chip {
+            background-color: #e3f2fd; /* Light Blue */
+            color: var(--primary-color);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+        }
+
+        .team-chip button {
+            background: none;
+            border: none;
+            color: var(--knockout-red);
+            cursor: pointer;
+            font-size: 1.1em;
+            line-height: 1;
+            padding: 0 0 0 5px;
+            transition: transform 0.2s;
+        }
+        .team-chip button:hover {
+            transform: scale(1.2);
+        }
+
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            .nav-buttons button {
+                padding: 12px 20px;
+                font-size: 1em;
+            }
+            .fixture-match {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 15px;
+            }
+            .match-info, .score-input {
+                width: 100%;
+                justify-content: space-between;
+                margin-bottom: 10px;
+            }
+            .score-input {
+                justify-content: flex-start;
+            }
+            .score-input button {
+                margin-top: 5px;
+            }
+            .league-table th, .league-table td {
+                padding: 8px 5px;
+                font-size: 0.8em;
+            }
+            
+            .team-input-group {
+                flex-direction: column;
+            }
+            .team-input-group button {
+                width: 100%;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>E FOOTBALL 2026</h1>
+        <p>FIFA World Cup / European Tournament Simulation</p>
+    </header>
+
+    <div class="container">
+        
+        <div class="nav-buttons">
+            <button onclick="showSection('league')">⚽ League Phase</button>
+            <button onclick="showSection('tournament')">🥅 Knockout Bracket</button>
+            <button onclick="showSection('history')">📜 Tournament History</button>
+        </div>
+
+        
+        <div id="league" class="section active">
+            <h2>League Group Stage</h2>
+            
+            <div id="league-management" class="league-management-wrapper">
+                <h3>1. Manage Teams 📝</h3>
+                
+                <div class="team-input-group">
+                    <input type="text" id="league-new-team-name" placeholder="Enter Team Name (e.g., Brazil, Germany)">
+                    <button class="manage-btn add-btn" onclick="addTeam('league')">
+                        <span style="font-size: 1.2em;">➕</span> Add Team
+                    </button>
+                </div>
+
+                <button class="manage-btn generate-btn" onclick="generateFixtures()">
+                    <span style="font-size: 1.2em;">🗓️</span> Generate Fixtures (Double Leg)
+                </button>
+
+                <div class="team-list-display-container">
+                    <div class="team-list-title">
+                        Teams in Group Stage (Current: <span id="league-team-count-display">0</span>) 
+                    </div>
+                    <div id="league-team-list-display" class="team-chip-container">
+                        </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="tab-nav" style="text-align: center; margin-bottom: 20px;">
+                <button onclick="setLeagueTab('leg1')" id="tab-leg1" style="background-color: var(--primary-color); color: var(--text-light); border-radius: 5px 0 0 5px; padding: 10px 20px;">Leg 1 Fixtures</button>
+                <button onclick="setLeagueTab('leg2')" id="tab-leg2" style="background-color: #ccc; color: var(--text-dark); border-radius: 0 5px 5px 0; padding: 10px 20px;">Leg 2 Fixtures</button>
+                <button onclick="setLeagueTab('table')" id="tab-table" style="background-color: #ccc; color: var(--text-dark); border-radius: 5px; padding: 10px 20px; margin-left: 10px;">League Table</button>
+            </div>
+            
+            <div id="league-fixtures-container-leg1" class="fixture-container league-tab active">
+                <p>Leg 1 matches will appear here.</p>
+            </div>
+            
+            <div id="league-fixtures-container-leg2" class="fixture-container league-tab" style="display: none;">
+                <p>Leg 2 matches will appear here.</p>
+            </div>
+            
+            <div id="league-table-view" class="league-tab" style="display: none;">
+                <h3>League Table</h3>
+                <table class="league-table">
+                    <thead>
+                        <tr>
+                            <th class="team-name">Team</th>
+                            <th>P</th><th>W</th><th>D</th><th>L</th>
+                            <th>GF</th><th>GA</th><th>GD</th><th>Pts</th>
+                            <th>Form</th> 
+                        </tr>
+                    </thead>
+                    <tbody id="league-table-body">
+                    </tbody>
+                </table>
+                <button onclick="checkLeagueWinner()" style="margin-top: 15px; background-color: var(--secondary-color); color: var(--primary-color);">Determine Group Winner 👑</button>
+                <button onclick="clearHistory('league')" style="margin-top: 15px; background-color: var(--knockout-red); color: var(--text-light); margin-left: 10px;">Reset League History 🧹</button>
+            </div>
+        </div>
+
+        
+        <div id="tournament" class="section">
+            <h2>Knockout Tournament</h2>
+            <p>Single Elimination (8 Teams): Aggregate scoring over two legs, Penalties if tied.</p>
+            
+            <div id="tournament-management" class="league-management-wrapper">
+                <h3>1. Manage Teams (Max 8 Teams) 🏆</h3>
+                
+                <div class="team-input-group">
+                    <input type="text" id="tournament-new-team-name" placeholder="Enter Team Name (8 required for Bracket)">
+                    <button class="manage-btn add-btn" onclick="addTeam('tournament')">
+                        <span style="font-size: 1.2em;">➕</span> Add Team
+                    </button>
+                </div>
+                
+                <button class="manage-btn generate-btn" onclick="generateKnockoutFixtures()" style="background-color: var(--knockout-red); margin-top: 15px;">
+                    <span style="font-size: 1.2em;">💥</span> Start Tournament
+                </button>
+                
+                <div class="team-list-display-container">
+                    <div class="team-list-title">
+                        Teams in Knockout Stage (Current: <span id="tournament-team-count-display">0</span>/8) 
+                    </div>
+                    <div id="tournament-team-list-display" class="team-chip-container">
+                        </div>
+                </div>
+            </div>
+            
+            <hr>
+            
+            <h3>2. Bracket: <span id="current-round-display"></span></h3>
+            <div id="tournament-fixtures-container" class="knockout-round fixture-container">
+                <p>Add 8 teams to start.</p>
+            </div>
+
+            <button id="next-round-btn" onclick="advanceKnockoutRound()" style="display:none; margin-top: 15px; background-color: var(--primary-color); color: var(--text-light);">Advance to Next Round ➡️</button>
+        </div>
+
+        
+        <div id="history" class="section">
+            <h2>Winners History</h2>
+            <div class="history-section">
+                <h3>League Champions 🏆</h3>
+                <ul id="league-history-list"></ul>
+                <button onclick="clearHistory('league')" style="margin-top: 10px; background-color: var(--knockout-red); color: var(--text-light);">Reset League History 🧹</button>
+            </div>
+            <div class="history-section" style="margin-top: 30px;">
+                <h3>Tournament Winners 👑</h3>
+                <ul id="tournament-history-list"></ul>
+                <button onclick="clearHistory('tournament')" style="margin-top: 10px; background-color: var(--knockout-red); color: var(--text-light);">Reset Tournament History 🧹</button>
+            </div>
+        </div>
+
+    </div>
+    
+    
+    <div id="trophy-popup" class="trophy-popup" onclick="this.style.display='none'">
+        <div class="trophy-content">
+            <div class="trophy-icon">🏆</div>
+            <h2 id="trophy-winner-name"></h2>
+            <p id="trophy-message"></p>
+            <small>Click anywhere to dismiss</small>
+        </div>
+    </div>
+
+
+    <script>
+        // --- JAVASCRIPT LOGIC ---
+
+        // LEAGUE VARIABLES
+        const leagueTeams = [];
+        const leagueTableData = {};
+        let leagueFixtures = []; 
+
+        // TOURNAMENT VARIABLES
+        let tournamentTeams = [];
+        let knockoutRounds = ['Quarter-Finals', 'Semi-Finals', 'Final'];
+        let currentRoundIndex = -1;
+        let currentRoundMatches = [];
+        let tournamentWinner = null;
+
+        // HISTORY VARIABLES (Persistent storage using localStorage)
+        let leagueHistory = JSON.parse(localStorage.getItem('leagueHistory')) || [];
+        let tournamentHistory = JSON.parse(localStorage.getItem('tournamentHistory')) || [];
+
+        let currentLeagueTab = 'leg1'; // Initial league sub-tab
+
+
+        // GENERAL FUNCTIONS
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+            if (sectionId === 'history') {
+                displayHistory();
+            } else if (sectionId === 'league') {
+                setLeagueTab(currentLeagueTab); // Refresh the current league tab view
+            }
+        }
+        
+        // Function to handle league tab switching
+        function setLeagueTab(tabId) {
+            currentLeagueTab = tabId;
+            document.querySelectorAll('.league-tab').forEach(tab => {
+                tab.style.display = 'none';
+                tab.classList.remove('active');
+            });
+
+            // Reset tab styles
+            const tabNames = ['leg1', 'leg2', 'table'];
+            tabNames.forEach(name => {
+                const tabButton = document.getElementById(`tab-${name}`);
+                if (tabButton) tabButton.style.backgroundColor = '#ccc';
+            });
+            
+
+            // Set active tab style and display content
+            const activeTabButton = document.getElementById(`tab-${tabId}`);
+            if (activeTabButton) activeTabButton.style.backgroundColor = 'var(--primary-color)';
+
+
+            if (tabId === 'table') {
+                document.getElementById('league-table-view').style.display = 'block';
+                updateLeagueTable();
+            } else {
+                const containerId = `league-fixtures-container-${tabId}`;
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.style.display = 'block';
+                    container.classList.add('active');
+                    displayLeagueFixtures(tabId === 'leg1' ? 1 : 2); // Pass the leg number to display function
+                }
+            }
+        }
+
+
+        function showTrophy(winnerName, competitionType) {
+            const popup = document.getElementById('trophy-popup');
+            
+            document.getElementById('trophy-winner-name').textContent = `${winnerName} Wins the ${competitionType}!`;
+            document.getElementById('trophy-message').textContent = 'Congratulations, Champion!';
+            popup.style.display = 'flex';
+            
+            const history = competitionType === 'League' ? leagueHistory : tournamentHistory;
+            history.push({ winner: winnerName, date: new Date().toLocaleDateString() });
+            localStorage.setItem(competitionType === 'League' ? 'leagueHistory' : 'tournamentHistory', JSON.stringify(history));
+            displayHistory();
+        }
+
+        function displayHistory() {
+            const leagueList = document.getElementById('league-history-list');
+            const tournamentList = document.getElementById('tournament-history-list');
+            
+            leagueList.innerHTML = '';
+            tournamentList.innerHTML = '';
+
+            leagueHistory.forEach(record => {
+                const li = document.createElement('li');
+                li.innerHTML = `🏆 ${record.winner} <small>(${record.date})</small>`;
+                leagueList.appendChild(li);
+            });
+
+            tournamentHistory.forEach(record => {
+                const li = document.createElement('li');
+                li.innerHTML = `👑 ${record.winner} <small>(${record.date})</small>`;
+                tournamentList.appendChild(li);
+            });
+        }
+        
+        // Function to clear history
+        function clearHistory(type) {
+            const confirmMessage = `Are you sure you want to permanently clear the ${type} Winner History? This cannot be undone.`;
+            if (confirm(confirmMessage)) {
+                if (type === 'league') {
+                    localStorage.removeItem('leagueHistory');
+                    leagueHistory = [];
+                } else if (type === 'tournament') {
+                    localStorage.removeItem('tournamentHistory');
+                    tournamentHistory = [];
+                }
+                displayHistory(); // Refresh the display
+                alert(`${type} Winner History has been cleared.`);
+                // If currently viewing the league table, refresh it
+                if (type === 'league' && currentLeagueTab === 'table') {
+                    updateLeagueTable();
+                }
+            }
+        }
+
+
+        // --- LEAGUE LOGIC ---
+
+        function initializeLeagueTableData(teamName) {
+            leagueTableData[teamName] = { P: 0, W: 0, D: 0, L: 0, GF: 0, GA: 0, GD: 0, Pts: 0 };
+        }
+
+        function addTeam(type) {
+            const inputId = type === 'league' ? 'league-new-team-name' : 'tournament-new-team-name';
+            const teamInput = document.getElementById(inputId);
+            const teamName = teamInput.value.trim();
+            
+            if (!teamName) return;
+
+            const normalizedName = teamName.toUpperCase();
+            const teamsArray = type === 'league' ? leagueTeams : tournamentTeams;
+            
+            if (teamsArray.map(name => name.toUpperCase()).includes(normalizedName)) {
+                alert('Team already exists!');
+                return;
+            }
+
+            if (type === 'tournament' && tournamentTeams.length >= 8) {
+                alert('Tournament is limited to 8 teams!');
+                return;
+            }
+
+            if (type === 'league') {
+                leagueTeams.push(teamName);
+                initializeLeagueTableData(teamName);
+                updateLeagueTable();
+            } else { // Tournament
+                tournamentTeams.push(teamName);
+            }
+            
+            teamInput.value = '';
+            updateTeamListDisplay(type);
+        }
+        
+        function removeTeam(teamName, type) {
+            const teamsArray = type === 'league' ? leagueTeams : tournamentTeams;
+            const index = teamsArray.indexOf(teamName);
+
+            if (index > -1) {
+                // Remove team from the array
+                if (type === 'league') {
+                     // Check if any match is played before removal
+                    const hasPlayedMatch = leagueFixtures.some(f => f.played && (f.home === teamName || f.away === teamName));
+                    if (hasPlayedMatch) {
+                         alert(`Cannot remove ${teamName}: they have already played matches in the league! Reset the league first.`);
+                         return;
+                    }
+                    leagueTeams.splice(index, 1);
+                    delete leagueTableData[teamName]; // Clean up stats
+                    leagueFixtures = leagueFixtures.filter(f => f.home !== teamName && f.away !== teamName);
+                    updateLeagueTable();
+                } else {
+                    // Check if tournament has started
+                    if (currentRoundIndex > -1) {
+                         alert(`Cannot remove ${teamName}: the knockout tournament has already started!`);
+                         return;
+                    }
+                    tournamentTeams.splice(index, 1);
+                }
+            }
+
+            updateTeamListDisplay(type);
+        }
+
+
+        function updateTeamListDisplay(type) {
+            const teams = type === 'league' ? leagueTeams : tournamentTeams;
+            const displayId = type === 'league' ? 'league-team-list-display' : 'tournament-team-list-display';
+            const countId = type === 'league' ? 'league-team-count-display' : 'tournament-team-count-display';
+
+            const container = document.getElementById(displayId);
+            container.innerHTML = ''; // Clear existing chips
+
+            teams.forEach(team => {
+                const teamChip = document.createElement('div');
+                teamChip.className = 'team-chip';
+                teamChip.innerHTML = `
+                    <span style="font-size: 1em;">⚽</span> ${team}
+                    <button onclick="removeTeam('${team}', '${type}')" title="Remove Team">🗑️</button>
+                `;
+                container.appendChild(teamChip);
+            });
+            
+            // Update the team count display
+            if (type === 'league') {
+                 document.getElementById(countId).textContent = teams.length;
+            } else {
+                 document.getElementById(countId).textContent = `${teams.length}`;
+            }
+        }
+        
+        // Round Robin Fixture Generation
+        function generateFixtures() {
+            if (leagueTeams.length < 2) {
+                alert('Need at least 2 teams for league!');
+                return;
+            }
+
+            // Clear previous stats
+            leagueFixtures = [];
+            for (const team in leagueTableData) {
+                initializeLeagueTableData(team);
+            }
+            updateLeagueTable();
+            
+            let teams = [...leagueTeams];
+            
+            const hasBye = teams.length % 2 !== 0;
+            if (hasBye) {
+                teams.push('BYE');
+            }
+
+            const numTeams = teams.length;
+            const rounds = numTeams - 1;
+            const matchesPerRound = numTeams / 2;
+            let currentMatchId = 1;
+
+            // Generate first half (Leg 1: Home fixtures)
+            for (let round = 1; round <= rounds; round++) {
+                for (let i = 0; i < matchesPerRound; i++) {
+                    const home = teams[i];
+                    const away = teams[numTeams - 1 - i];
+
+                    if (home !== 'BYE' && away !== 'BYE') {
+                        leagueFixtures.push({ 
+                            id: currentMatchId++,
+                            home: home, 
+                            away: away, 
+                            played: false, 
+                            result: null, 
+                            matchDay: round,
+                            leg: 1 
+                        });
+                    }
+                }
+                teams.splice(1, 0, teams.pop());
+            }
+            
+            // Create Leg 2 entries and link them to Leg 1
+            const leg1Fixtures = leagueFixtures.filter(f => f.leg === 1);
+            const numLegs = rounds;
+            leg1Fixtures.forEach(match1 => {
+                 const match2 = { 
+                    id: currentMatchId++,
+                    home: match1.away, 
+                    away: match1.home,
+                    played: false, 
+                    result: null, 
+                    matchDay: match1.matchDay + numLegs, // Shift Match Day for Leg 2
+                    leg: 2 ,
+                    pairedId: match1.id 
+                };
+                leagueFixtures.push(match2);
+                match1.pairedId = match2.id;
+            });
+            
+            setLeagueTab(currentLeagueTab); // Re-render the tab content
+        }
+
+        
+        // Helper function to find the paired match (the other leg)
+        function findPairedMatch(currentMatch) {
+            return leagueFixtures.find(f => f.id === currentMatch.pairedId);
+        }
+
+
+        // Function to calculate and return form indicators
+        function getTeamFormIndicators(teamName, count = 5) {
+            // 1. Filter and get all matches played by this team
+            const teamMatches = leagueFixtures
+                .filter(f => f.played && (f.home === teamName || f.away === teamName))
+                .sort((a, b) => b.id - a.id) // Sort by ID descending (most recent first)
+                .slice(0, count); // Get only the last 'count' matches
+
+            const indicators = teamMatches.map(match => {
+                const homeScore = match.result.homeScore;
+                const awayScore = match.result.awayScore;
+                
+                let result = '';
+                
+                if (match.home === teamName) {
+                    // Team is Home
+                    if (homeScore > awayScore) {
+                        result = '✅'; // Win
+                    } else if (homeScore < awayScore) {
+                        result = '❌'; // Loss
+                    } else {
+                        result = '⚪'; // Draw
+                    }
+                } else {
+                    // Team is Away
+                    if (awayScore > homeScore) {
+                        result = '✅'; // Win
+                    } else if (awayScore < homeScore) {
+                        result = '❌'; // Loss
+                    } else {
+                        result = '⚪'; // Draw
+                    }
+                }
+                return result;
+            });
+
+            // Ensure the array has 'count' elements, padding with simple dash if less than 5 matches played
+            while (indicators.length < count) {
+                indicators.push('-'); 
+            }
+            
+            // Reverse the array to display oldest result first (Left-to-Right progression)
+            return indicators.reverse().join(' ');
+        }
+
+
+        // Displays fixtures for the specified leg (1 or 2)
+        function displayLeagueFixtures(targetLeg) {
+            const containerId = targetLeg === 1 ? 'league-fixtures-container-leg1' : 'league-fixtures-container-leg2';
+            const container = document.getElementById(containerId);
+            container.innerHTML = '';
+            
+            const fixturesForLeg = leagueFixtures.filter(f => f.leg === targetLeg);
+            
+            const fixturesByDay = fixturesForLeg.reduce((acc, fixture) => {
+                const day = fixture.matchDay;
+                if (!acc[day]) acc[day] = [];
+                acc[day].push(fixture);
+                return acc;
+            }, {});
+
+            Object.keys(fixturesByDay).sort((a,b) => a-b).forEach(matchDay => {
+                const matches = fixturesByDay[matchDay];
+                
+                const header = document.createElement('div');
+                header.className = 'match-day-header';
+                header.textContent = `⚽ Match Day ${matchDay} (Leg ${targetLeg})`;
+                container.appendChild(header);
+
+                matches.forEach((match) => {
+                    const matchDiv = document.createElement('div');
+                    matchDiv.className = 'fixture-match';
+                    matchDiv.id = `match-${match.id}`;
+                    
+                    let scoreDisplay = 'VS';
+                    let scoreInputs = '';
+                    let aggDisplay = '';
+                    let finalStyle = '';
+                    
+                    const isPlayed = match.played;
+
+                    if (!isPlayed) {
+                        // Display input fields and button
+                        scoreInputs = `
+                            <input type="number" id="home-${match.id}" value="0" min="0" style="width: 40px; text-align: center;">
+                            -
+                            <input type="number" id="away-${match.id}" value="0" min="0" style="width: 40px; text-align: center;">
+                            <button onclick="recordLeagueScore(${match.id}, ${match.leg})">Record Leg ${match.leg}</button>
+                        `;
+                    } else {
+                        // Display recorded score
+                        scoreDisplay = `${match.result.homeScore} - ${match.result.awayScore}`;
+                        scoreInputs = `<span style="font-weight:bold; color: var(--tertiary-color);">FINAL: ${scoreDisplay}</span>`;
+                        finalStyle = 'border-left: 5px solid var(--tertiary-color); background-color: #e8f5e9;';
+
+                        // Aggregate logic only for Leg 2
+                        if (match.leg === 2) {
+                            const leg1Match = findPairedMatch(match);
+                            if (leg1Match && leg1Match.played) {
+                                // Home team (match.home) aggregate score is: Leg 2 Home + Leg 1 Away
+                                const aggHome = match.result.homeScore + leg1Match.result.awayScore; 
+                                // Away team (match.away) aggregate score is: Leg 2 Away + Leg 1 Home
+                                const aggAway = match.result.awayScore + leg1Match.result.homeScore; 
+                                
+                                const aggWinner = aggHome > aggAway ? match.home : (aggAway > aggHome ? match.away : 'Tied');
+                                
+                                aggDisplay = `<span class="agg-score-display" style="color: ${aggWinner === 'Tied' ? 'var(--knockout-red)' : 'var(--primary-color)'}; margin-left: 15px;">AGG: ${aggHome} - ${aggAway} (${aggWinner})</span>`;
+                            }
+                        }
+                    }
+
+                    matchDiv.style = finalStyle;
+                    matchDiv.innerHTML = `
+                        <div class="match-info">
+                            <span>${match.home}</span>
+                            <strong>${scoreDisplay}</strong>
+                            <span>${match.away}</span>
+                        </div>
+                        <div class="score-input">
+                            ${scoreInputs}
+                            ${aggDisplay}
+                        </div>
+                    `;
+                    container.appendChild(matchDiv);
+                });
+            });
+        }
+        
+        // Reads scores from the visible input fields and calls update
+        function recordLeagueScore(matchId, leg) {
+            const matchIndex = leagueFixtures.findIndex(f => f.id === matchId);
+            const match = leagueFixtures[matchIndex];
+            
+            const homeInput = document.getElementById(`home-${matchId}`);
+            const awayInput = document.getElementById(`away-${matchId}`);
+
+            const homeScore = parseInt(homeInput.value);
+            const awayScore = parseInt(awayInput.value);
+            
+            if (isNaN(homeScore) || isNaN(awayScore) || homeScore < 0 || awayScore < 0) {
+                alert("Please enter valid, non-negative scores.");
+                return;
+            }
+
+            // Validation: Must complete Leg 1 before Leg 2 can be recorded
+            if (leg === 2) {
+                const leg1Match = findPairedMatch(match);
+                if (!leg1Match || !leg1Match.played) {
+                    alert(`You must record the scores for Leg 1 (Match Day ${leg1Match.matchDay}) before recording Leg 2.`);
+                    return;
+                }
+            }
+
+            updateLeagueScore(matchIndex, homeScore, awayScore);
+        }
+
+
+        function updateLeagueScore(matchIndex, homeScore, awayScore) {
+            const match = leagueFixtures[matchIndex];
+            
+            match.result = { homeScore, awayScore };
+            match.played = true;
+            
+            const homeTeam = leagueTableData[match.home];
+            const awayTeam = leagueTableData[match.away];
+
+            // Update stats
+            homeTeam.P++; awayTeam.P++;
+            homeTeam.GF += homeScore; homeTeam.GA += awayScore;
+            awayTeam.GF += awayScore; awayTeam.GA += homeScore;
+
+            if (homeScore > awayScore) {
+                homeTeam.W++; awayTeam.L++; homeTeam.Pts += 3;
+            } else if (awayScore > homeScore) {
+                awayTeam.W++; homeTeam.L++; awayTeam.Pts += 3;
+            } else {
+                homeTeam.D++; awayTeam.D++; homeTeam.Pts += 1; awayTeam.Pts += 1;
+            }
+
+            homeTeam.GD = homeTeam.GF - homeTeam.GA;
+            awayTeam.GD = awayTeam.GF - awayTeam.GA;
+
+            updateLeagueTable();
+            // Re-render both tabs to ensure Leg 1 updates Leg 2 status and vice-versa
+            displayLeagueFixtures(1); 
+            displayLeagueFixtures(2); 
+        }
+
+        function updateLeagueTable() {
+            const tbody = document.getElementById('league-table-body');
+            tbody.innerHTML = '';
+
+            let sortedTeams = Object.keys(leagueTableData).map(teamName => ({ name: teamName, ...leagueTableData[teamName] }));
+            sortedTeams.sort((a, b) => {
+                if (b.Pts !== a.Pts) return b.Pts - a.Pts;
+                if (b.GD !== a.GD) return b.GD - a.GD;
+                return b.GF - a.GF;
+            });
+            
+            const totalTeams = sortedTeams.length;
+            const promotionSpots = 2; // Top 2 promoted/champions
+            const relegationSpots = 2; // Bottom 2 relegated
+
+            sortedTeams.forEach((team, index) => {
+                const row = tbody.insertRow();
+                const position = index + 1;
+                
+                let teamClass = '';
+                
+                if (position <= promotionSpots) {
+                    teamClass = 'promotion-team';
+                } else if (position > totalTeams - relegationSpots && totalTeams > promotionSpots + relegationSpots) {
+                    teamClass = 'relegation-team';
+                }
+
+                if (teamClass) {
+                    row.classList.add(teamClass);
+                }
+                
+                // --- GET LAST 5 MATCHES ---
+                const lastFiveIndicators = getTeamFormIndicators(team.name, 5);
+                
+                // REMOVED: teamIcon logic (arrows)
+                row.innerHTML = `
+                    <td class="team-name" style="text-align: left;">
+                        ${position}. ${team.name}
+                    </td>
+                    <td>${team.P}</td><td>${team.W}</td><td>${team.D}</td><td>${team.L}</td>
+                    <td>${team.GF}</td><td>${team.GA}</td><td>${team.GD}</td>
+                    <td><strong style="color: var(--primary-color);">${team.Pts}</strong></td>
+                    <td class="form-indicators">${lastFiveIndicators}</td>
+                `;
+            });
+        }
+
+        function checkLeagueWinner() {
+            const leagueTeamsCount = leagueTeams.length;
+            const totalMatchesRequired = leagueTeamsCount * (leagueTeamsCount - 1); 
+            const playedMatches = leagueFixtures.filter(f => f.played).length;
+            
+            if (playedMatches < totalMatchesRequired) {
+                alert(`Complete all ${totalMatchesRequired} matches (${playedMatches} played) to determine the winner!`);
+                return;
+            }
+            
+            if (leagueTeamsCount > 0) {
+                let sortedTeams = Object.keys(leagueTableData).map(teamName => ({ name: teamName, ...leagueTableData[teamName] }));
+                sortedTeams.sort((a, b) => {
+                    if (b.Pts !== a.Pts) return b.Pts - a.Pts;
+                    if (b.GD !== a.GD) return b.GD - a.GD;
+                    return b.GF - a.GF;
+                });
+                showTrophy(sortedTeams[0].name, 'League');
+            }
+        }
+
+
+        // --- TOURNAMENT (KNOCKOUT) LOGIC ---
+
+        function generateKnockoutFixtures() {
+            if (tournamentTeams.length !== 8 && tournamentTeams.length !== 4 && tournamentTeams.length !== 2) {
+                alert('Knockout requires 8, 4, or 2 teams to start! Currently: ' + tournamentTeams.length);
+                return;
+            }
+            
+            currentRoundIndex = knockoutRounds.indexOf(tournamentTeams.length === 8 ? 'Quarter-Finals' : (tournamentTeams.length === 4 ? 'Semi-Finals' : 'Final'));
+            currentRoundMatches.length = 0;
+            tournamentWinner = null;
+            document.getElementById('next-round-btn').style.display = 'none';
+
+            const shuffledTeams = [...tournamentTeams].sort(() => 0.5 - Math.random());
+            
+            for (let i = 0; i < shuffledTeams.length; i += 2) {
+                currentRoundMatches.push({
+                    home: shuffledTeams[i],
+                    away: shuffledTeams[i + 1],
+                    playedLeg1: false,
+                    playedLeg2: false,
+                    leg1: null,
+                    leg2: null,
+                    winner: null
+                });
+            }
+            displayKnockoutFixtures();
+        }
+
+        function displayKnockoutFixtures() {
+            const container = document.getElementById('tournament-fixtures-container');
+            const roundName = currentRoundIndex > -1 ? knockoutRounds[currentRoundIndex] : 'Setup';
+            document.getElementById('current-round-display').textContent = roundName;
+            container.innerHTML = `<h4>${roundName} (${currentRoundMatches.length} Ties)</h4>`;
+            
+            if (tournamentWinner) {
+                container.innerHTML = `<h3 style="color: var(--primary-color);">🏆 Tournament Winner: ${tournamentWinner} 👑</h3>`;
+                return;
+            }
+
+            let allPlayed = true;
+
+            currentRoundMatches.forEach((match, index) => {
+                const matchDiv = document.createElement('div');
+                matchDiv.className = 'fixture-match';
+                
+                let inputs = '';
+                if (!match.playedLeg1) {
+                    inputs += `
+                        <input type="number" id="k-${index}-leg1-home" value="0" min="0">
+                        -
+                        <input type="number" id="k-${index}-leg1-away" value="0" min="0">
+                        <button onclick="updateKnockoutScore(${index}, 1)">Record Leg 1</button>
+                    `;
+                    allPlayed = false;
+                } else if (!match.playedLeg2) {
+                    const leg1Score = `${match.leg1.homeScore} - ${match.leg1.awayScore}`;
+                    inputs += `
+                        <span style="color: var(--primary-color); font-size: 0.9em;">Leg 1: ${leg1Score}</span> | 
+                        <input type="number" id="k-${index}-leg2-home" value="0" min="0">
+                        -
+                        <input type="number" id="k-${index}-leg2-away" value="0" min="0">
+                        <button onclick="updateKnockoutScore(${index}, 2)">Record Leg 2</button>
+                    `;
+                    allPlayed = false;
+                } else {
+                    const agg = match.leg1.homeScore + match.leg2.awayScore;
+                    const aggAway = match.leg1.awayScore + match.leg2.homeScore;
+                    inputs = `<span style="font-weight:bold; color: var(--primary-color);">AGG: ${agg} - ${aggAway}</span> | Winner: <span style="color: var(--knockout-red); font-weight:bold;">${match.winner}</span>`;
+                }
+
+                matchDiv.innerHTML = `
+                    <div class="match-info">
+                        <span>${match.home}</span>
+                        <strong>VS</strong>
+                        <span>${match.away}</span>
+                    </div>
+                    <div class="score-input">${inputs}</div>
+                `;
+                container.appendChild(matchDiv);
+            });
+            
+            if (allPlayed && currentRoundIndex < knockoutRounds.length - 1 && currentRoundMatches.length > 0) {
+                document.getElementById('next-round-btn').style.display = 'block';
+            } else {
+                document.getElementById('next-round-btn').style.display = 'none';
+            }
+        }
+
+        function updateKnockoutScore(matchIndex, leg) {
+            const match = currentRoundMatches[matchIndex];
+            
+            let homeScore, awayScore;
+            
+            // Read scores from the visible input fields
+            if (leg === 1) {
+                homeScore = parseInt(document.getElementById(`k-${matchIndex}-leg1-home`).value);
+                awayScore = parseInt(document.getElementById(`k-${matchIndex}-leg1-away`).value);
+            } else { // Leg 2
+                homeScore = parseInt(document.getElementById(`k-${matchIndex}-leg2-home`).value);
+                awayScore = parseInt(document.getElementById(`k-${matchIndex}-leg2-away`).value);
+            }
+
+            if (isNaN(homeScore) || isNaN(awayScore) || homeScore < 0 || awayScore < 0) {
+                 alert("Please enter valid, non-negative scores.");
+                 return;
+            }
+            
+            if (leg === 1) {
+                match.leg1 = { homeScore, awayScore };
+                match.playedLeg1 = true;
+
+            } else { // Leg 2
+                match.leg2 = { homeScore, awayScore };
+                match.playedLeg2 = true;
+                
+                const aggHome = match.leg1.homeScore + match.leg2.awayScore;
+                const aggAway = match.leg1.awayScore + match.leg2.homeScore;
+
+                if (aggHome > aggAway) {
+                    match.winner = match.home;
+                } else if (aggAway > aggHome) {
+                    match.winner = match.away;
+                } else {
+                    let homePen, awayPen;
+                    let validPenalties = false;
+                    
+                    while(!validPenalties) {
+                        const penInput = prompt(`Aggregate is tied (${aggHome}-${aggAway}). Enter penalty shootout score (e.g., 5-4) for ${match.home} vs ${match.away}:`);
+                        if (!penInput) {
+                            alert("Penalty score is required to proceed.");
+                            continue;
+                        }
+                        const scores = penInput.split('-').map(s => parseInt(s.trim()));
+                        
+                        if (scores.length === 2 && !isNaN(scores[0]) && !isNaN(scores[1]) && scores[0] >= 0 && scores[1] >= 0 && scores[0] !== scores[1]) {
+                            homePen = scores[0];
+                            awayPen = scores[1];
+                            validPenalties = true;
+                        } else {
+                            alert("Invalid penalty score format. Must be two different, non-negative numbers separated by a hyphen (e.g., 5-4).");
+                        }
+                    }
+
+                    if (homePen > awayPen) {
+                        match.winner = match.home;
+                    } else {
+                        match.winner = match.away;
+                    }
+                    alert(`${match.winner} wins ${homePen}-${awayPen} on penalties!`);
+                }
+            }
+            displayKnockoutFixtures();
+        }
+
+        function advanceKnockoutRound() {
+            const winners = currentRoundMatches.map(m => m.winner);
+            
+            if (winners.length === 1) {
+                tournamentWinner = winners[0];
+                displayKnockoutFixtures();
+                showTrophy(tournamentWinner, 'Tournament');
+                return;
+            }
+            
+            tournamentTeams = winners;
+            currentRoundIndex++;
+            generateKnockoutFixtures();
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('league');
+            displayHistory();
+            updateTeamListDisplay('league'); // Initialize league team list on load
+            updateTeamListDisplay('tournament'); // Initialize tournament team list on load
+        });
+
+    </script>
+</body>
+</html>
